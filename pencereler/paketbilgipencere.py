@@ -30,6 +30,7 @@ class PaketBilgiPencere(QWidget):
         self.adi_label = QLabel()
         form_kutu.addRow(QLabel("<b>Adı\t: </b>"),self.adi_label)
         self.tanim_label = QLabel()
+        self.tanim_label.setWordWrap(True)
         form_kutu.addRow(QLabel("<b>Tanımı\t: </b>"),self.tanim_label)
         self.url_label = QLabel()
         form_kutu.addRow(QLabel("<b>Url\t: </b>"),self.url_label)

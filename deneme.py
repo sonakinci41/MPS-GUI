@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout, QStackedWidget)
 from PyQt5.QtGui import QIcon
-from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere
+from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere, kursilpencere
 import sys, surec
 
 class MerkezPencere(QMainWindow):
@@ -21,9 +21,15 @@ class MerkezPencere(QMainWindow):
         self.asamalar.addWidget(self.paketgenelpencere)
         self.paketbilgipencere = paketbilgipencere.PaketBilgiPencere(self)
         self.asamalar.addWidget(self.paketbilgipencere)
+        self.kursilpencere = kursilpencere.KurSilPencere(self)
+        self.asamalar.addWidget(self.kursilpencere)
 
         self.asamalar.setCurrentIndex(0)
         self.depo_esitle()
+
+    def paket_kur_sil(self,paket_adi,islem):
+        self.kursilpencere.sorgu_surec_baslat(paket_adi,islem)
+        self.asamalar.setCurrentIndex(3)
 
     def paket_secildi(self,paket_adi):
         self.paketbilgipencere.surec_baslat(paket_adi)

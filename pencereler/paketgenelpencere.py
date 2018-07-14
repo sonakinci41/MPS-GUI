@@ -81,10 +81,10 @@ class OzelMadde(QWidget):
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setText("Sil")
-            self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff")
+            self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
         else:
             self.kur_sil_dugme.setText("Kur")
-            self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff")
+            self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
     def secildi(self):
         self.ebeveyn.ebeveyn.paket_secildi(self.paket_adi)

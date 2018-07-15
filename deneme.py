@@ -7,6 +7,7 @@ import sys, surec
 class MerkezPencere(QMainWindow):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
+        self.setMinimumSize(800,500)
         merkez_widget = QWidget()
         self.setCentralWidget(merkez_widget)
         merkez_kutu = QVBoxLayout()

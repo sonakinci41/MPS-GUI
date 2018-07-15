@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton, qApp, QListView, QLineEdit)
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox, QListWidget, QListWidgetItem, QPushButton, qApp, QListView, QLineEdit)
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 import surec
@@ -43,17 +43,23 @@ class PaketGenelPencere(QWidget):
             self.arama_fonk()
 
     def arama_fonk(self):
-        self.grup_liste.setCurrentRow(0)
-        if self.arama_le.text() != "":
+        if self.arama_le.text() != "" and len(self.arama_le.text()) > 2:
+            self.grup_liste.setCurrentRow(0)
+            self.grup_liste.setDisabled(True)
             self.arama_sonucu = []
             self.komut = "mps ara {} --normal".format(self.arama_le.text())
             terminal_thread = surec.SurecThread(self)
             terminal_thread.update.connect(self.arama_guncelle)
             terminal_thread.finished.connect(self.arama_bitti)
             terminal_thread.start()
+        else:
+            QMessageBox.warning(self,"Dikkat","Lütfen arama yapmak için 2 den fazla harf giriniz")
 
     def arama_bitti(self):
+        if len(self.arama_sonucu) == 0:
+            QMessageBox.warning(self,"Dikkat","Hiç Sonuç Bulunamadı")
         self.paket_liste_guncelle()
+        self.grup_liste.setDisabled(False)
 
     def arama_guncelle(self,cikti):
         self.arama_sonucu.append(cikti.split(" - ")[0][7:])

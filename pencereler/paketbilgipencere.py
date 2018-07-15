@@ -66,10 +66,9 @@ class PaketBilgiPencere(QWidget):
         terminal_thread.start()
 
     def surec_bitti(self):
-        print("okey")
+        pass
 
     def surec_guncelle(self,cikti):
-        print(cikti)
         if cikti[7:10] == "ADI":
             self.adi_label.setText(cikti[20:-7])
         elif cikti[7:12] == "TANIM":

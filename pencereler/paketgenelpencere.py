@@ -1,31 +1,71 @@
-from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton, qApp, QListView)
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton, qApp, QListView, QLineEdit)
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
+import surec
 
 class PaketGenelPencere(QWidget):
     def __init__(self, ebeveyn=None):
         super(PaketGenelPencere, self).__init__(ebeveyn)
         self.ebeveyn = ebeveyn
-        merkez_kutu = QHBoxLayout()
+        merkez_kutu = QVBoxLayout()
         merkez_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(merkez_kutu)
+ 
+        arama_kutu = QHBoxLayout()
+        merkez_kutu.addLayout(arama_kutu)
+ 
+        self.arama_le = QLineEdit()
+        arama_kutu.addWidget(self.arama_le)
+ 
+        self.arama_pb = QPushButton("Ara")
+        self.arama_pb.clicked.connect(self.arama_fonk)
+        self.arama_pb.setIcon(QIcon.fromTheme("search"))
+        arama_kutu.addWidget(self.arama_pb)
+ 
+        liste_kutu = QHBoxLayout()
+        merkez_kutu.addLayout(liste_kutu)
 
         self.grup_liste = QListWidget()
         self.grup_liste.currentItemChanged.connect(self.paket_liste_guncelle)
         self.grup_liste.setFixedWidth(250)
-        merkez_kutu.addWidget(self.grup_liste)
+        liste_kutu.addWidget(self.grup_liste)
 
         self.paket_liste = QListWidget()
         #self.paket_liste.setViewMode(QListView.IconMode)
         self.paket_liste.setResizeMode(QListView.Adjust)
         #self.paket_liste.setMovement(QListView.Snap)
-        merkez_kutu.addWidget(self.paket_liste)
+        liste_kutu.addWidget(self.paket_liste)
+
+        self.arama_sonucu = []
+
+    def keyPressEvent(self,event):
+        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
+            self.arama_fonk()
+
+    def arama_fonk(self):
+        self.grup_liste.setCurrentRow(0)
+        if self.arama_le.text() != "":
+            self.arama_sonucu = []
+            self.komut = "mps ara {} --normal".format(self.arama_le.text())
+            terminal_thread = surec.SurecThread(self)
+            terminal_thread.update.connect(self.arama_guncelle)
+            terminal_thread.finished.connect(self.arama_bitti)
+            terminal_thread.start()
+
+    def arama_bitti(self):
+        self.paket_liste_guncelle()
+
+    def arama_guncelle(self,cikti):
+        self.arama_sonucu.append(cikti.split(" - ")[0][7:])
 
     def paket_liste_guncelle(self):
         self.paket_liste.clear()
         secili = self.grup_liste.currentItem().text()
         if secili == "Tümü":
             paketler = self.ebeveyn.tum_paketler
+        elif secili == "Arama":
+            self.arama_le.setFocus(True)
+            paketler = self.arama_sonucu
         else:
             paketler = self.ebeveyn.grup_paketler[secili]
         for paket in paketler:
@@ -41,6 +81,7 @@ class PaketGenelPencere(QWidget):
 
     def grup_liste_guncelle(self):
         self.grup_liste.clear()
+        self.grup_liste.addItem(QListWidgetItem(QIcon.fromTheme("search"),"Arama"))
         self.grup_liste.addItem(QListWidgetItem(QIcon.fromTheme("application-default-icon"),"Tümü"))
         for grup in self.ebeveyn.gruplar:
             icon = QIcon.fromTheme(grup, QIcon.fromTheme("applications-other"))

@@ -62,7 +62,8 @@ class KurSilPencere(QWidget):
         if self.islem == "Kur":
             self.komut = "mps kur {} --normal".format(self.paket_adi)
         elif self.islem == "Sil":
-            self.komut = "mps sil {} --normal".format(self.paket_adi)
+            self.yapilan_islem.setText("{} Paketi Siliniyor".format(self.paket_adi))
+            self.komut = "mps sil {} evet --normal".format(self.paket_adi)
         terminal_thread = surec.SurecThread(self)
         terminal_thread.update.connect(self.islem_surec_guncelle)
         terminal_thread.finished.connect(self.islem_surec_bitti)

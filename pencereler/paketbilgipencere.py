@@ -66,7 +66,18 @@ class PaketBilgiPencere(QWidget):
         terminal_thread.start()
 
     def surec_bitti(self):
-        pass
+        icon = self.ebeveyn.icon_getir(self.paket_adi)
+        self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
+        if self.paket_adi in self.ebeveyn.kurulu_paketler:
+            self.kur_sil_dugme.setText("Sil")
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
+            self.kur_sil_dugme.setIconSize(QSize(48,48))
+            self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
+        else:
+            self.kur_sil_dugme.setText("Kur")
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
+            self.kur_sil_dugme.setIconSize(QSize(48,48))
+            self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
     def surec_guncelle(self,cikti):
         if cikti[7:10] == "ADI":
@@ -90,15 +101,3 @@ class PaketBilgiPencere(QWidget):
         elif cikti[7:15] == "https://":
             self.kaynak_2_label.setText(cikti[7:-7])
 
-        icon = QIcon.fromTheme(self.paket_adi, QIcon.fromTheme("package-manager-icon"))
-        self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
-        if self.paket_adi in self.ebeveyn.kurulu_paketler:
-            self.kur_sil_dugme.setText("Sil")
-            self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(48,48))
-            self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
-        else:
-            self.kur_sil_dugme.setText("Kur")
-            self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(48,48))
-            self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")

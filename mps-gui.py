@@ -2,12 +2,13 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout, QStackedWidget)
 from PyQt5.QtGui import QIcon
 from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere, kursilpencere
-import sys, surec
+import os, sys, surec
 
 class MerkezPencere(QMainWindow):
     def __init__(self, ebeveyn=None):
         super(MerkezPencere, self).__init__(ebeveyn)
         self.setMinimumSize(800,500)
+        self.icon_adresi = "/usr/share/icons/Numix-Circle-Light/scalable/apps/"
         merkez_widget = QWidget()
         self.setCentralWidget(merkez_widget)
         merkez_kutu = QVBoxLayout()
@@ -27,6 +28,15 @@ class MerkezPencere(QMainWindow):
 
         self.asamalar.setCurrentIndex(0)
         self.depo_esitle()
+
+    def icon_getir(self,icon_adi):
+        if os.path.exists(self.icon_adresi+icon_adi+".svg"):
+            icon = QIcon(self.icon_adresi+icon_adi+".svg")
+        elif os.path.exists(self.icon_adresi+"package-manager-icon.svg"):
+            icon = QIcon(self.icon_adresi+"package-manager-icon.svg")
+        else:
+            icon = QIcon.fromTheme(icon_adi, QIcon.fromTheme("package-manager-icon"))
+        return icon
 
     def paket_kur_sil(self,paket_adi,islem):
         self.kursilpencere.sorgu_surec_baslat(paket_adi,islem)

@@ -88,9 +88,11 @@ class PaketGenelPencere(QWidget):
     def grup_liste_guncelle(self):
         self.grup_liste.clear()
         self.grup_liste.addItem(QListWidgetItem(QIcon("./iconlar/ara.svg"),"Arama"))
-        self.grup_liste.addItem(QListWidgetItem(QIcon.fromTheme("application-default-icon"),"Tümü"))
+        icon = self.ebeveyn.icon_getir("application-default-icon")
+        self.grup_liste.addItem(QListWidgetItem(icon,"Tümü"))
         for grup in self.ebeveyn.gruplar:
-            icon = QIcon.fromTheme(grup, QIcon.fromTheme("applications-other"))
+            icon = self.ebeveyn.icon_getir("applications-other")
+            icon = QIcon.fromTheme(grup, icon)
             lm = QListWidgetItem(icon,grup)
             self.grup_liste.addItem(lm)
         self.grup_liste.setCurrentRow(0)
@@ -122,7 +124,7 @@ class OzelMadde(QWidget):
         merkez_kutu.addWidget(self.kur_sil_dugme)
 
     def madde_duzenle(self,isim):
-        icon = QIcon.fromTheme(isim, QIcon.fromTheme("package-manager-icon"))
+        icon = self.ebeveyn.ebeveyn.icon_getir(isim)
         self.resim_dugme.setIcon(icon)
         self.yazi_dugme.setText(isim)
         self.paket_adi = isim

@@ -19,7 +19,7 @@ class PaketGenelPencere(QWidget):
  
         self.arama_pb = QPushButton("Ara")
         self.arama_pb.clicked.connect(self.arama_fonk)
-        self.arama_pb.setIcon(QIcon.fromTheme("search"))
+        self.arama_pb.setIcon(QIcon("./iconlar/ara.svg"))
         arama_kutu.addWidget(self.arama_pb)
  
         liste_kutu = QHBoxLayout()
@@ -87,7 +87,7 @@ class PaketGenelPencere(QWidget):
 
     def grup_liste_guncelle(self):
         self.grup_liste.clear()
-        self.grup_liste.addItem(QListWidgetItem(QIcon.fromTheme("search"),"Arama"))
+        self.grup_liste.addItem(QListWidgetItem(QIcon("./iconlar/ara.svg"),"Arama"))
         self.grup_liste.addItem(QListWidgetItem(QIcon.fromTheme("application-default-icon"),"Tümü"))
         for grup in self.ebeveyn.gruplar:
             icon = QIcon.fromTheme(grup, QIcon.fromTheme("applications-other"))
@@ -127,10 +127,12 @@ class OzelMadde(QWidget):
         self.yazi_dugme.setText(isim)
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
-            self.kur_sil_dugme.setText("Sil")
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
+            self.kur_sil_dugme.setIconSize(QSize(48,48))
             self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
         else:
-            self.kur_sil_dugme.setText("Kur")
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
+            self.kur_sil_dugme.setIconSize(QSize(48,48))
             self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
     def secildi(self):

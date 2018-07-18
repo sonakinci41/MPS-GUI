@@ -22,7 +22,7 @@ class PaketBilgiPencere(QWidget):
         self.kur_sil_dugme.setFixedHeight(64)
         self.geri_dugme = QPushButton("Geri")
         self.geri_dugme.setStyleSheet("background-color:#3689e6;border:None;color:#ffffff;font-weight:bold")
-        self.geri_dugme.setIcon(QIcon.fromTheme("edit-undo"))
+        self.geri_dugme.setIcon(QIcon("./iconlar/geri.svg"))
         self.geri_dugme.setIconSize(QSize(48,48))
         self.geri_dugme.clicked.connect(self.geri_fonk)
         dugmeler_kutu.addWidget(self.geri_dugme)
@@ -94,11 +94,11 @@ class PaketBilgiPencere(QWidget):
         self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
         if self.paket_adi in self.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setText("Sil")
-            self.kur_sil_dugme.setIcon(QIcon.fromTheme("user-trash"))
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
             self.kur_sil_dugme.setIconSize(QSize(48,48))
             self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
         else:
             self.kur_sil_dugme.setText("Kur")
-            self.kur_sil_dugme.setIcon(QIcon.fromTheme("download"))
+            self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
             self.kur_sil_dugme.setIconSize(QSize(48,48))
             self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")

@@ -27,33 +27,31 @@ class KurSilPencere(QWidget):
         self.yapilan_islem = QLabel()
         merkez_kutu.addWidget(self.yapilan_islem)
 
-
-
-
-
     def sorgu_surec_baslat(self,paket,islem):
         self.paket_adi = paket
         self.islem = islem
         icon = QIcon.fromTheme(self.paket_adi, QIcon.fromTheme("package-manager-icon"))
         self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
         self.paket_adi_label.setText(self.paket_adi)
-        if islem == "Kur":
-            self.yapilan_islem.setText("{} Paketinin Bağımlılıkları Sorgulanıyor".format(paket))
-            self.komut = "mps -ykp {} --normal".format(paket)
-            terminal_thread = surec.SurecThread(self)
-            terminal_thread.update.connect(self.sorgu_surec_guncelle)
-            terminal_thread.finished.connect(self.sorgu_surec_bitti)
-            terminal_thread.start()
-        elif islem == "Sil":
-            self.yapilan_islem.setText("{} Paketi İle Silinecekler Sorgulanıyor".format(paket))
+        self.yapilan_islem.setText("{} Paketinin Bağımlılıkları Sorgulanıyor".format(paket))
+        self.komut = "mps -ykp {} --normal".format(paket)
+        terminal_thread = surec.SurecThread(self)
+        terminal_thread.update.connect(self.sorgu_surec_guncelle)
+        terminal_thread.finished.connect(self.sorgu_surec_bitti)
+        terminal_thread.start()
+
+
+    def sorgu_surec_bitti(self):
+        if self.islem == "Kur":
+            surec_pencere = SurecBaslatOnay(self)
+            surec_pencere.kutu_guncelle("{} paketi için aşağıdaki paketler kurulacak".format(self.paket_adi),"\n".join(self.bagimliliklar))
+            surec_pencere.exec_()
+        elif self.islem == "Sil":
+            self.yapilan_islem.setText("{} Paketi İle Silinecekler Sorgulanıyor".format(self.paket_adi))
             surec_pencere = SurecBaslatOnay(self)
             surec_pencere.kutu_guncelle("{} paketiyle beraber aşağıdaki paketler silinecek".format(self.paket_adi),self.paket_adi)
             surec_pencere.exec_()
 
-    def sorgu_surec_bitti(self):
-        surec_pencere = SurecBaslatOnay(self)
-        surec_pencere.kutu_guncelle("{} paketi için aşağıdaki paketler kurulacak".format(self.paket_adi),"\n".join(self.bagimliliklar))
-        surec_pencere.exec_()
 
     def sorgu_surec_guncelle(self,cikti):
         self.bagimliliklar = cikti.replace(".","").split()

@@ -11,22 +11,15 @@ class PaketGenelPencere(QWidget):
         merkez_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(merkez_kutu)
  
-        arama_kutu = QHBoxLayout()
-        merkez_kutu.addLayout(arama_kutu)
- 
         self.arama_le = QLineEdit()
-        arama_kutu.addWidget(self.arama_le)
- 
-        self.arama_pb = QPushButton("Ara")
-        self.arama_pb.clicked.connect(self.arama_fonk)
-        self.arama_pb.setIcon(QIcon("./iconlar/ara.svg"))
-        arama_kutu.addWidget(self.arama_pb)
+        self.arama_le.textChanged.connect(self.yazi_degisti)
+        merkez_kutu.addWidget(self.arama_le)
  
         liste_kutu = QHBoxLayout()
         merkez_kutu.addLayout(liste_kutu)
 
         self.grup_liste = QListWidget()
-        self.grup_liste.currentItemChanged.connect(self.paket_liste_guncelle)
+        self.grup_liste.itemSelectionChanged.connect(self.paket_liste_guncelle)
         self.grup_liste.setFixedWidth(250)
         liste_kutu.addWidget(self.grup_liste)
 
@@ -38,33 +31,22 @@ class PaketGenelPencere(QWidget):
 
         self.arama_sonucu = []
 
-    def keyPressEvent(self,event):
-        if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
-            self.arama_fonk()
-
-    def arama_fonk(self):
-        if self.arama_le.text() != "" and len(self.arama_le.text()) > 1:
-            self.grup_liste.setCurrentRow(0)
-            self.grup_liste.setDisabled(True)
-            self.arama_sonucu = []
-            self.komut = "mps ara {} --normal".format(self.arama_le.text())
-            terminal_thread = surec.SurecThread(self)
-            terminal_thread.update.connect(self.arama_guncelle)
-            terminal_thread.finished.connect(self.arama_bitti)
-            terminal_thread.start()
-        else:
-            QMessageBox.warning(self,"Dikkat","Lütfen arama yapmak için 1 den fazla harf giriniz")
-
-    def arama_bitti(self):
-        if len(self.arama_sonucu) == 0:
-            QMessageBox.warning(self,"Dikkat","Hiç Sonuç Bulunamadı")
-        self.paket_liste_guncelle()
+    def yazi_degisti(self):
+        self.arama_sonucu = []
+        aranacak = self.arama_le.text()
+        self.grup_liste.setCurrentRow(0)
+        self.grup_liste.setDisabled(True)
+        if len(aranacak) > 0:
+            for paket in self.ebeveyn.paketler_sozluk.keys():
+                if aranacak == self.arama_le.text():
+                    if aranacak in paket:
+                        self.arama_sonucu.append(paket)
+                else:
+                    break
         self.grup_liste.setDisabled(False)
+        self.paket_liste_guncelle(aranacak)
 
-    def arama_guncelle(self,cikti):
-        self.arama_sonucu.append(cikti.split(" - ")[0][7:])
-
-    def paket_liste_guncelle(self):
+    def paket_liste_guncelle(self,arama=None):
         self.paket_liste.clear()
         secili = self.grup_liste.currentItem().text()
         if secili == "Tümü":
@@ -75,7 +57,7 @@ class PaketGenelPencere(QWidget):
         else:
             paketler = self.ebeveyn.gruplar_sozluk[secili]
         for paket in paketler:
-            if secili == self.grup_liste.currentItem().text():
+            if secili == self.grup_liste.currentItem().text() and (arama == None or arama == self.arama_le.text()):
                 ozel_madde = OzelMadde(self)
                 ozel_madde.madde_duzenle(paket)
                 ozel_madde_item = QListWidgetItem(self.paket_liste)
@@ -137,7 +119,9 @@ class OzelMadde(QWidget):
         try:
             self.aciklama_dugme.setText(self.ebeveyn.ebeveyn.paketler_sozluk[isim]["Tanim"])
         except:
-        	self.aciklama_dugme.setText("")
+            self.ebeveyn.ebeveyn.tum_paketler.remove(isim)
+            self.aciklama_dugme.setText("")
+            pass
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))

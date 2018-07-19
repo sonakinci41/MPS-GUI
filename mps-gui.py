@@ -58,22 +58,52 @@ class MerkezPencere(QMainWindow):
         self.islem = "kurulu_paketler_tespit"
         self.surec_baslat()
 
-    def grup_paketler_tespit(self,sayac):
-        self.grup = self.gruplar[sayac]
-        self.komut = "mps paketler {} --normal".format(self.grup)
-        self.islem = "grup_paketler_tespit"
-        self.surec_baslat()
-
-    def gruplar_tespit(self):
-        self.gruplar = []
-        self.komut = "mps gruplar --normal"
-        self.islem = "gruplar_tespit"
-        self.surec_baslat()
-
     def depo_esitle(self):
         self.komut = "mps -GG && mps guncelle --normal"
         self.islem = "depo_esitle"
         self.surec_baslat()
+
+    def son_kontroller(self):
+        self.paketler_sozluk = {}
+        self.gruplar_sozluk = {}
+        for i in os.listdir("/root/talimatname/genel"):
+            dizin = "/root/talimatname/genel/"+i
+            for a in os.listdir(dizin):
+                self.bilgi_getir(dizin,a)
+            for i in os.listdir("/root/talimatname/temel/"):
+                dizin = "/root/talimatname/temel"
+                self.bilgi_getir(dizin,i)
+
+    def bilgi_getir(self,dizin,isim):
+        if os.path.exists(dizin+"/"+isim+"/"+"talimat"):
+            f = open(dizin+"/"+isim+"/"+"talimat","r")
+            okunan = f.readlines()
+            f.close()
+            self.paketler_sozluk[isim] = {"Tanim":"","URL":"","Paketci":"","Gerekler":"","Grup":"","Surum":"","Devir":"","Kaynak":""}
+            for satir in okunan:
+                if "# Tanım: " in satir:
+                    self.paketler_sozluk[isim]["Tanim"] = satir.split("# Tanım: ")[1][:-1]
+                elif "# URL: " in satir:
+                    self.paketler_sozluk[isim]["URL"] = satir.split("# URL: ")[1][:-1]
+                elif "# Paketçi: " in satir:
+                    self.paketler_sozluk[isim]["Paketci"] = satir.split("# Paketçi: ")[1][:-1]
+                elif "# Gerekler: " in satir:
+                    self.paketler_sozluk[isim]["Gerekler"] = satir.split("# Gerekler: ")[1][:-1]
+                elif "# Grup: " in satir:
+                    gruplar = satir.split("# Grup: ")[1][:-1]
+                    self.paketler_sozluk[isim]["Grup"] = gruplar
+                    for grup in gruplar.split():
+                        varmi =  self.gruplar_sozluk.get(grup,"bunelan")
+                        if varmi == "bunelan":
+                            self.gruplar_sozluk[grup]=[isim]
+                        else:
+                            varmi.append(isim)
+                elif "surum=" in satir:
+                    self.paketler_sozluk[isim]["Surum"] = satir.split("surum=")[1][:-1]
+                elif "devir=" in satir:
+                    self.paketler_sozluk[isim]["Devir"] = satir.split("devir=")[1][:-1]
+                elif "kaynak=" in satir:
+                    self.paketler_sozluk[isim]["Kaynak"] = satir.split("kaynak=")[1][:-1]
 
     def surec_baslat(self):
         terminal_thread = surec.SurecThread(self)
@@ -87,24 +117,13 @@ class MerkezPencere(QMainWindow):
             self.kurulu_paketler_tespit()
         elif self.islem == "kurulu_paketler_tespit":
             self.desitlepencere.donut_label.setText("Kurulu Paketler Tespit Edildi")
-            self.gruplar_tespit()
-        elif self.islem == "gruplar_tespit":
-            self.desitlepencere.donut_label.setText("Gruplar Tespit Edildi")
-            self.grup_paketler = {}
-            self.grup_sayac = 0
-            self.grup_paketler_tespit(self.grup_sayac)
-        elif self.islem == "grup_paketler_tespit":
-            self.grup_sayac += 1
-            if self.grup_sayac == len(self.gruplar):
-                self.desitlepencere.donut_label.setText("Tüm Paketler Tespit Edildi")
-                self.tum_paketler_kontrol()
-            else:
-                self.grup_paketler_tespit(self.grup_sayac)
+            self.tum_paketler_kontrol()
         elif self.islem == "tum_paketler_kontrol":
-            self.desitlepencere.donut_label.setText("Tüm Paketler Kontrol Edildi")
-            self.asamalar.setCurrentIndex(1)
+            self.desitlepencere.donut_label.setText("MPS-GUI Paket Veri Tabanı Eşitleniyor")
+            self.son_kontroller()
             self.paketgenelpencere.grup_liste_guncelle()
             self.paketgenelpencere.paket_liste_guncelle()
+            self.asamalar.setCurrentIndex(1)
 
     def surec_guncelle(self,cikti):
         if self.islem == "depo_esitle":
@@ -112,11 +131,6 @@ class MerkezPencere(QMainWindow):
         elif self.islem == "kurulu_paketler_tespit":
             self.kurulu_paketler.append(cikti)
             self.desitlepencere.donut_label.setText("Kurlu Paketler Tespit Ediliyor : "+cikti)
-        elif self.islem == "gruplar_tespit":
-            self.gruplar = cikti.split()
-        elif self.islem == "grup_paketler_tespit":
-            self.grup_paketler[self.grup] = cikti.split()
-            self.desitlepencere.donut_label.setText(self.grup+" Altındaki Paketler Tespit Ediliyor")
         elif self.islem == "tum_paketler_kontrol":
             self.tum_paketler.append(cikti)
             

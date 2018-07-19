@@ -47,9 +47,7 @@ class PaketBilgiPencere(QWidget):
         form_kutu.addRow(QLabel("<b>Gerekler\t: </b>"),self.gerekler_label)
         self.kaynak_1_label = QLabel()
         form_kutu.addRow(QLabel("<b>Kaynak-1\t: </b>"),self.kaynak_1_label)
-        self.kaynak_2_label = QLabel()
-        form_kutu.addRow(QLabel("<b>Kaynak-2\t: </b>"),self.kaynak_2_label)
-
+ 
     def geri_fonk(self):
         self.ebeveyn.asamalar.setCurrentIndex(1)
 
@@ -59,16 +57,9 @@ class PaketBilgiPencere(QWidget):
 
     def surec_baslat(self,paket):
         self.paket_adi = paket
-        self.komut = "mps bilgi {} --normal".format(paket)
-        terminal_thread = surec.SurecThread(self)
-        terminal_thread.update.connect(self.surec_guncelle)
-        terminal_thread.finished.connect(self.surec_bitti)
-        terminal_thread.start()
-
-    def surec_bitti(self):
-        icon = self.ebeveyn.icon_getir(self.paket_adi)
+        icon = self.ebeveyn.icon_getir(paket)
         self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
-        if self.paket_adi in self.ebeveyn.kurulu_paketler:
+        if paket in self.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setText("Sil")
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
             self.kur_sil_dugme.setIconSize(QSize(48,48))
@@ -79,25 +70,13 @@ class PaketBilgiPencere(QWidget):
             self.kur_sil_dugme.setIconSize(QSize(48,48))
             self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
-    def surec_guncelle(self,cikti):
-        if cikti[7:10] == "ADI":
-            self.adi_label.setText(cikti[20:-7])
-        elif cikti[7:12] == "TANIM":
-            self.tanim_label.setText(cikti[20:-7])
-        elif cikti[7:10] == "URL":
-            self.url_label.setText(cikti[20:-7])
-        elif cikti[7:14] == "PAKETÇİ":
-            self.paketci_label.setText(cikti[20:-7])
-        elif cikti[7:12] == "SÜRÜM":
-            self.surum_label.setText(cikti[20:-7])
-        elif cikti[7:12] == "DEVİR":
-            self.devir_label.setText(cikti[20:-7])
-        elif cikti[7:11] == "GRUP":
-            self.grup_label.setText(cikti[20:-7])
-        elif cikti[0:11] == "# Gerekler:":
-            self.gerekler_label.setText(cikti[11:])
-        elif cikti[7:15] == "file:///":
-            self.kaynak_1_label.setText(cikti[7:-7])
-        elif cikti[7:15] == "https://":
-            self.kaynak_2_label.setText(cikti[7:-7])
-
+        paket_bilgisi = self.ebeveyn.paketler_sozluk[paket]
+        self.adi_label.setText(paket)
+        self.tanim_label.setText(paket_bilgisi["Tanim"])
+        self.url_label.setText(paket_bilgisi["URL"])
+        self.paketci_label.setText(paket_bilgisi["Paketci"])
+        self.surum_label.setText(paket_bilgisi["Surum"])
+        self.devir_label.setText(paket_bilgisi["Devir"])
+        self.grup_label.setText(paket_bilgisi["Grup"])
+        self.gerekler_label.setText(paket_bilgisi["Gerekler"])
+        self.kaynak_1_label.setText(paket_bilgisi["Kaynak"])

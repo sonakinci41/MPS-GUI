@@ -73,7 +73,7 @@ class PaketGenelPencere(QWidget):
             self.arama_le.setFocus(True)
             paketler = self.arama_sonucu
         else:
-            paketler = self.ebeveyn.grup_paketler[secili]
+            paketler = self.ebeveyn.gruplar_sozluk[secili]
         for paket in paketler:
             if secili == self.grup_liste.currentItem().text():
                 ozel_madde = OzelMadde(self)
@@ -90,7 +90,7 @@ class PaketGenelPencere(QWidget):
         self.grup_liste.addItem(QListWidgetItem(QIcon("./iconlar/ara.svg"),"Arama"))
         icon = self.ebeveyn.icon_getir("application-default-icon")
         self.grup_liste.addItem(QListWidgetItem(icon,"Tümü"))
-        for grup in self.ebeveyn.gruplar:
+        for grup in self.ebeveyn.gruplar_sozluk.keys():
             icon = self.ebeveyn.icon_getir("applications-other")
             icon = QIcon.fromTheme(grup, icon)
             lm = QListWidgetItem(icon,grup)
@@ -101,32 +101,43 @@ class OzelMadde(QWidget):
     def __init__(self, ebeveyn=None):
         super(OzelMadde, self).__init__(ebeveyn)
         self.ebeveyn = ebeveyn
-        self.setFixedHeight(32)
+        self.setFixedHeight(64)
         merkez_kutu = QHBoxLayout()
         merkez_kutu.setContentsMargins(0,0,0,0)
+        yazi_kutu = QVBoxLayout()
+        yazi_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(merkez_kutu)
         self.resim_dugme = QPushButton()
         self.resim_dugme.clicked.connect(self.secildi)
-        self.resim_dugme.setFixedWidth(32)
-        self.resim_dugme.setFixedHeight(32)
-        self.resim_dugme.setIconSize(QSize(32,32))
+        self.resim_dugme.setFixedWidth(64)
+        self.resim_dugme.setFixedHeight(64)
+        self.resim_dugme.setIconSize(QSize(64,64))
         self.resim_dugme.setStyleSheet("border:None")
         merkez_kutu.addWidget(self.resim_dugme)
-        self.yazi_dugme = QPushButton()
-        self.yazi_dugme.clicked.connect(self.secildi)
-        self.yazi_dugme.setFixedHeight(32)
-        self.yazi_dugme.setStyleSheet("border:None")
-        merkez_kutu.addWidget(self.yazi_dugme)
+        merkez_kutu.addLayout(yazi_kutu)
+        self.yazi_dugme = QLabel()
+        self.yazi_dugme.setFixedHeight(18)
+        self.yazi_dugme.setStyleSheet("border:None;text-align:left;font-weight:bold")
+        yazi_kutu.addWidget(self.yazi_dugme)
+        self.aciklama_dugme = QLabel()
+        self.aciklama_dugme.setWordWrap(True)
+        self.aciklama_dugme.setFixedHeight(40)
+        #self.aciklama_dugme.setStyleSheet("border:None;text-align:left")
+        yazi_kutu.addWidget(self.aciklama_dugme)
         self.kur_sil_dugme = QPushButton()
         self.kur_sil_dugme.clicked.connect(self.secildi)
-        self.kur_sil_dugme.setFixedWidth(32)
-        self.kur_sil_dugme.setFixedHeight(30)
+        self.kur_sil_dugme.setFixedWidth(64)
+        self.kur_sil_dugme.setFixedHeight(60)
         merkez_kutu.addWidget(self.kur_sil_dugme)
 
     def madde_duzenle(self,isim):
         icon = self.ebeveyn.ebeveyn.icon_getir(isim)
         self.resim_dugme.setIcon(icon)
         self.yazi_dugme.setText(isim)
+        try:
+            self.aciklama_dugme.setText(self.ebeveyn.ebeveyn.paketler_sozluk[isim]["Tanim"])
+        except:
+        	self.aciklama_dugme.setText("")
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))

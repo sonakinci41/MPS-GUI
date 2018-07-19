@@ -43,7 +43,7 @@ class PaketGenelPencere(QWidget):
             self.arama_fonk()
 
     def arama_fonk(self):
-        if self.arama_le.text() != "" and len(self.arama_le.text()) > 2:
+        if self.arama_le.text() != "" and len(self.arama_le.text()) > 1:
             self.grup_liste.setCurrentRow(0)
             self.grup_liste.setDisabled(True)
             self.arama_sonucu = []
@@ -53,7 +53,7 @@ class PaketGenelPencere(QWidget):
             terminal_thread.finished.connect(self.arama_bitti)
             terminal_thread.start()
         else:
-            QMessageBox.warning(self,"Dikkat","Lütfen arama yapmak için 2 den fazla harf giriniz")
+            QMessageBox.warning(self,"Dikkat","Lütfen arama yapmak için 1 den fazla harf giriniz")
 
     def arama_bitti(self):
         if len(self.arama_sonucu) == 0:
@@ -101,26 +101,26 @@ class OzelMadde(QWidget):
     def __init__(self, ebeveyn=None):
         super(OzelMadde, self).__init__(ebeveyn)
         self.ebeveyn = ebeveyn
-        self.setFixedHeight(64)
+        self.setFixedHeight(32)
         merkez_kutu = QHBoxLayout()
         merkez_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(merkez_kutu)
         self.resim_dugme = QPushButton()
         self.resim_dugme.clicked.connect(self.secildi)
-        self.resim_dugme.setFixedWidth(64)
-        self.resim_dugme.setFixedHeight(64)
-        self.resim_dugme.setIconSize(QSize(64,64))
+        self.resim_dugme.setFixedWidth(32)
+        self.resim_dugme.setFixedHeight(32)
+        self.resim_dugme.setIconSize(QSize(32,32))
         self.resim_dugme.setStyleSheet("border:None")
         merkez_kutu.addWidget(self.resim_dugme)
         self.yazi_dugme = QPushButton()
         self.yazi_dugme.clicked.connect(self.secildi)
-        self.yazi_dugme.setFixedHeight(64)
+        self.yazi_dugme.setFixedHeight(32)
         self.yazi_dugme.setStyleSheet("border:None")
         merkez_kutu.addWidget(self.yazi_dugme)
         self.kur_sil_dugme = QPushButton()
         self.kur_sil_dugme.clicked.connect(self.secildi)
-        self.kur_sil_dugme.setFixedWidth(64)
-        self.kur_sil_dugme.setFixedHeight(60)
+        self.kur_sil_dugme.setFixedWidth(32)
+        self.kur_sil_dugme.setFixedHeight(30)
         merkez_kutu.addWidget(self.kur_sil_dugme)
 
     def madde_duzenle(self,isim):
@@ -130,11 +130,11 @@ class OzelMadde(QWidget):
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(48,48))
+            self.kur_sil_dugme.setIconSize(QSize(24,24))
             self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
         else:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(48,48))
+            self.kur_sil_dugme.setIconSize(QSize(24,24))
             self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
     def secildi(self):

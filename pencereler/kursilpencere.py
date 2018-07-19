@@ -30,7 +30,7 @@ class KurSilPencere(QWidget):
     def sorgu_surec_baslat(self,paket,islem):
         self.paket_adi = paket
         self.islem = islem
-        icon = QIcon.fromTheme(self.paket_adi, QIcon.fromTheme("package-manager-icon"))
+        icon = self.ebeveyn.icon_getir(self.paket_adi)
         self.icon_label.setPixmap(icon.pixmap(icon.actualSize(QSize(64,64))))
         self.paket_adi_label.setText(self.paket_adi)
         self.yapilan_islem.setText("{} Paketinin Bağımlılıkları Sorgulanıyor".format(paket))

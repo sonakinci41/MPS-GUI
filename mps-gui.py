@@ -39,8 +39,8 @@ class MerkezPencere(QMainWindow):
         return icon
 
     def paket_kur_sil(self,paket_adi,islem):
-        self.kursilpencere.sorgu_surec_baslat(paket_adi,islem)
         self.asamalar.setCurrentIndex(3)
+        self.kursilpencere.sorgu_surec_baslat(paket_adi,islem)
 
     def paket_secildi(self,paket_adi):
         self.paketbilgipencere.surec_baslat(paket_adi)
@@ -79,31 +79,33 @@ class MerkezPencere(QMainWindow):
             f = open(dizin+"/"+isim+"/"+"talimat","r")
             okunan = f.readlines()
             f.close()
-            self.paketler_sozluk[isim] = {"Tanim":"","URL":"","Paketci":"","Gerekler":"","Grup":"","Surum":"","Devir":"","Kaynak":""}
-            for satir in okunan:
-                if "# Tanım: " in satir:
-                    self.paketler_sozluk[isim]["Tanim"] = satir.split("# Tanım: ")[1][:-1]
-                elif "# URL: " in satir:
-                    self.paketler_sozluk[isim]["URL"] = satir.split("# URL: ")[1][:-1]
-                elif "# Paketçi: " in satir:
-                    self.paketler_sozluk[isim]["Paketci"] = satir.split("# Paketçi: ")[1][:-1]
-                elif "# Gerekler: " in satir:
-                    self.paketler_sozluk[isim]["Gerekler"] = satir.split("# Gerekler: ")[1][:-1]
-                elif "# Grup: " in satir:
-                    gruplar = satir.split("# Grup: ")[1][:-1]
-                    self.paketler_sozluk[isim]["Grup"] = gruplar
-                    for grup in gruplar.split():
-                        varmi =  self.gruplar_sozluk.get(grup,"bunelan")
-                        if varmi == "bunelan":
-                            self.gruplar_sozluk[grup]=[isim]
-                        else:
-                            varmi.append(isim)
-                elif "surum=" in satir:
-                    self.paketler_sozluk[isim]["Surum"] = satir.split("surum=")[1][:-1]
-                elif "devir=" in satir:
-                    self.paketler_sozluk[isim]["Devir"] = satir.split("devir=")[1][:-1]
-                elif "kaynak=" in satir:
-                    self.paketler_sozluk[isim]["Kaynak"] = satir.split("kaynak=")[1][:-1]
+            varmi =  self.paketler_sozluk.get(isim,"bunelan")
+            if varmi == "bunelan":
+                self.paketler_sozluk[isim] = {"Tanim":"","URL":"","Paketci":"","Gerekler":"","Grup":"","Surum":"","Devir":"","Kaynak":""}
+                for satir in okunan:
+                    if "# Tanım: " in satir:
+                        self.paketler_sozluk[isim]["Tanim"] = satir.split("# Tanım: ")[1][:-1]
+                    elif "# URL: " in satir:
+                        self.paketler_sozluk[isim]["URL"] = satir.split("# URL: ")[1][:-1]
+                    elif "# Paketçi: " in satir:
+                        self.paketler_sozluk[isim]["Paketci"] = satir.split("# Paketçi: ")[1][:-1]
+                    elif "# Gerekler: " in satir:
+                        self.paketler_sozluk[isim]["Gerekler"] = satir.split("# Gerekler: ")[1][:-1]
+                    elif "# Grup: " in satir:
+                        gruplar = satir.split("# Grup: ")[1][:-1]
+                        self.paketler_sozluk[isim]["Grup"] = gruplar
+                        for grup in gruplar.split():
+                            varmi =  self.gruplar_sozluk.get(grup,"bunelan")
+                            if varmi == "bunelan":
+                                self.gruplar_sozluk[grup]=[isim]
+                            else:
+                                varmi.append(isim)
+                    elif "surum=" in satir:
+                        self.paketler_sozluk[isim]["Surum"] = satir.split("surum=")[1][:-1]
+                    elif "devir=" in satir:
+                        self.paketler_sozluk[isim]["Devir"] = satir.split("devir=")[1][:-1]
+                    elif "kaynak=" in satir:
+                        self.paketler_sozluk[isim]["Kaynak"] = satir.split("kaynak=")[1][:-1]
 
     def surec_baslat(self):
         terminal_thread = surec.SurecThread(self)

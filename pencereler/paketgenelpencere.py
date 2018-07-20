@@ -39,7 +39,7 @@ class PaketGenelPencere(QWidget):
         if len(aranacak) > 0:
             for paket in self.ebeveyn.paketler_sozluk.keys():
                 if aranacak == self.arama_le.text():
-                    if aranacak in paket:
+                    if aranacak.lower() in paket or aranacak.lower() in self.ebeveyn.paketler_sozluk[paket]["Tanim"].lower():
                         self.arama_sonucu.append(paket)
                 else:
                     break

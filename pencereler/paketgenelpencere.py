@@ -20,7 +20,7 @@ class PaketGenelPencere(QWidget):
 
         self.grup_liste = QListWidget()
         self.grup_liste.itemSelectionChanged.connect(self.paket_liste_guncelle)
-        self.grup_liste.setFixedWidth(250)
+        self.grup_liste.setFixedWidth(150)
         liste_kutu.addWidget(self.grup_liste)
 
         self.paket_liste = QListWidget()
@@ -125,11 +125,11 @@ class OzelMadde(QWidget):
         self.paket_adi = isim
         if isim in self.ebeveyn.ebeveyn.kurulu_paketler:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/sil.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(24,24))
+            self.kur_sil_dugme.setIconSize(QSize(36,36))
             self.kur_sil_dugme.setStyleSheet("background-color:#c6262e;border:None;color:#ffffff;font-weight:bold")
         else:
             self.kur_sil_dugme.setIcon(QIcon("./iconlar/kur.svg"))
-            self.kur_sil_dugme.setIconSize(QSize(24,24))
+            self.kur_sil_dugme.setIconSize(QSize(36,36))
             self.kur_sil_dugme.setStyleSheet("background-color:#68b723;border:None;color:#ffffff;font-weight:bold")
 
     def secildi(self):

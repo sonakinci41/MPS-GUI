@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QWidget, QVBoxLayout, QStackedWidget)
+from PyQt5.QtWidgets import (QMessageBox, QMainWindow, QApplication, QWidget, QVBoxLayout, QStackedWidget)
 from PyQt5.QtGui import QIcon
 from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere, kursilpencere
 import os, sys, surec
@@ -141,6 +141,9 @@ if __name__ == "__main__":
     uygulama = QApplication(sys.argv)
     uygulama.setOrganizationName('Paketci')
     uygulama.setApplicationName('Paketci')
-    merkezPencere = MerkezPencere()
-    merkezPencere.show()
-    sys.exit(uygulama.exec_())
+    if os.getuid() != 0:
+        QMessageBox.warning(QWidget(),"Hata","MPS-GUI çalışabilmek için root yetkilerine ihtiyaç duymaktadır.\nLütfen root yetkileriyle tekrar çalıştırın.")
+    else:
+        merkezPencere = MerkezPencere()
+        merkezPencere.show()
+        sys.exit(uygulama.exec_())

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import (QMessageBox, QMainWindow, QApplication, QWidget, QVBoxLayout, QStackedWidget)
 from PyQt5.QtGui import QIcon
-from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere, kursilpencere
+from pencereler import desitlepencere, paketgenelpencere, paketbilgipencere, kursilpencere, guncelle
 import os, sys, surec
 
 class MerkezPencere(QMainWindow):
@@ -25,6 +25,8 @@ class MerkezPencere(QMainWindow):
         self.asamalar.addWidget(self.paketbilgipencere)
         self.kursilpencere = kursilpencere.KurSilPencere(self)
         self.asamalar.addWidget(self.kursilpencere)
+        self.guncelle = guncelle.GuncellePencere(self)
+        self.asamalar.addWidget(self.guncelle)
 
         self.asamalar.setCurrentIndex(0)
         self.depo_esitle()
@@ -37,6 +39,10 @@ class MerkezPencere(QMainWindow):
         else:
             icon = QIcon.fromTheme(icon_adi, QIcon.fromTheme("package-manager-icon"))
         return icon
+
+    def paketleri_guncelle(self):
+        self.asamalar.setCurrentIndex(4)
+        self.guncelle.guncelle_surec_baslat()
 
     def paket_kur_sil(self,paket_adi,islem):
         self.asamalar.setCurrentIndex(3)

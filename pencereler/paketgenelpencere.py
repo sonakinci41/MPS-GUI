@@ -11,10 +11,25 @@ class PaketGenelPencere(QWidget):
         merkez_kutu.setContentsMargins(0,0,0,0)
         self.setLayout(merkez_kutu)
  
+        ust_kutu = QHBoxLayout()
+        ust_kutu.setContentsMargins(0,0,0,0)
+        merkez_kutu.addLayout(ust_kutu)
+
         self.arama_le = QLineEdit()
+        self.arama_le.setFixedHeight(24)
         self.arama_le.textChanged.connect(self.yazi_degisti)
-        merkez_kutu.addWidget(self.arama_le)
- 
+        ust_kutu.addWidget(self.arama_le)
+
+        guncelle_dugme = QPushButton("Güncelle")
+        guncelle_dugme.setFixedHeight(24)
+        guncelle_dugme.setFixedWidth(100)
+        guncelle_dugme.setIcon(QIcon("./iconlar/guncelle.svg"))
+        guncelle_dugme.setIconSize(QSize(18,18))
+        guncelle_dugme.setStyleSheet("background-color:#333333;border:None;color:#ffffff;font-weight:bold")
+
+        guncelle_dugme.clicked.connect(self.ebeveyn.paketleri_guncelle)
+        ust_kutu.addWidget(guncelle_dugme)
+
         liste_kutu = QHBoxLayout()
         merkez_kutu.addLayout(liste_kutu)
 

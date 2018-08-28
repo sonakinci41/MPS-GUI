@@ -102,9 +102,9 @@ class MerkezPencere(QMainWindow):
                         gruplar = satir.split("# Grup: ")[1][:-1]
                         self.paketler_sozluk[isim]["Grup"] = gruplar
                         for grup in gruplar.split():
-                            varmi =  self.gruplar_sozluk.get(grup,"bunelan")
+                            varmi =  self.gruplar_sozluk.get(grup.capitalize(),"bunelan")
                             if varmi == "bunelan":
-                                self.gruplar_sozluk[grup]=[isim]
+                                self.gruplar_sozluk[grup.capitalize()]=[isim]
                             else:
                                 varmi.append(isim)
                     elif "surum=" in satir:

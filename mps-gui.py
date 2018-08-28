@@ -42,6 +42,7 @@ class MerkezPencere(QMainWindow):
 
     def paketleri_guncelle(self):
         self.asamalar.setCurrentIndex(4)
+        self.guncelle.islem = "guncelle"
         self.guncelle.guncelle_surec_baslat()
 
     def paket_kur_sil(self,paket_adi,islem):

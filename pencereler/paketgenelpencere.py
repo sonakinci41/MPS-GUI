@@ -87,7 +87,7 @@ class PaketGenelPencere(QWidget):
         self.grup_liste.addItem(QListWidgetItem(QIcon("./iconlar/ara.svg"),"Arama"))
         icon = self.ebeveyn.icon_getir("application-default-icon")
         self.grup_liste.addItem(QListWidgetItem(icon,"Tümü"))
-        for grup in self.ebeveyn.gruplar_sozluk.keys():
+        for grup in sorted(self.ebeveyn.gruplar_sozluk):
             icon = self.ebeveyn.icon_getir("applications-other")
             icon = QIcon.fromTheme(grup, icon)
             lm = QListWidgetItem(icon,grup)
@@ -132,7 +132,10 @@ class OzelMadde(QWidget):
         self.resim_dugme.setIcon(icon)
         self.yazi_dugme.setText(isim)
         try:
-            self.aciklama_dugme.setText(self.ebeveyn.ebeveyn.paketler_sozluk[isim]["Tanim"])
+            yazi = self.ebeveyn.ebeveyn.paketler_sozluk[isim]["Tanim"].replace("\n","")
+            if len(yazi) > 130:
+                yazi = yazi[:130]+"..."
+            self.aciklama_dugme.setText(yazi)
         except:
             self.ebeveyn.ebeveyn.tum_paketler.remove(isim)
             self.aciklama_dugme.setText("")

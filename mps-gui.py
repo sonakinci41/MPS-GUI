@@ -86,9 +86,9 @@ class MerkezPencere(QMainWindow):
             f = open(dizin+"/"+isim+"/"+"talimat","r")
             okunan = f.readlines()
             f.close()
-            varmi =  self.paketler_sozluk.get(isim,"bunelan")
-            if varmi == "bunelan":
-                self.paketler_sozluk[isim] = {"Tanim":"","URL":"","Paketci":"","Gerekler":"","Grup":"","Surum":"","Devir":"","Kaynak":""}
+            varmi =  self.paketler_sozluk.get(isim,"yok")
+            if varmi == "yok":
+                self.paketler_sozluk[isim] = {"Tanim":"","URL":"","Paketci":"","Gerekler":"","Grup":"","Isim":"","Surum":"","Devir":"","Kaynak":""}
                 for satir in okunan:
                     if "# Tanım: " in satir:
                         self.paketler_sozluk[isim]["Tanim"] = satir.split("# Tanım: ")[1][:-1]
@@ -102,17 +102,26 @@ class MerkezPencere(QMainWindow):
                         gruplar = satir.split("# Grup: ")[1][:-1]
                         self.paketler_sozluk[isim]["Grup"] = gruplar
                         for grup in gruplar.split():
-                            varmi =  self.gruplar_sozluk.get(grup.capitalize(),"bunelan")
-                            if varmi == "bunelan":
+                            varmi =  self.gruplar_sozluk.get(grup.capitalize(),"yok")
+                            if varmi == "yok":
                                 self.gruplar_sozluk[grup.capitalize()]=[isim]
                             else:
                                 varmi.append(isim)
+                    elif "isim=" in satir:
+                        self.paketler_sozluk[isim]["Isim"] = satir.split("isim=")[1][:-1]
                     elif "surum=" in satir:
                         self.paketler_sozluk[isim]["Surum"] = satir.split("surum=")[1][:-1]
                     elif "devir=" in satir:
                         self.paketler_sozluk[isim]["Devir"] = satir.split("devir=")[1][:-1]
                     elif "kaynak=" in satir:
-                        self.paketler_sozluk[isim]["Kaynak"] = satir.split("kaynak=")[1][:-1]
+                        kaynak = satir.split("kaynak=")[1].split(")")[0][1:]
+                        kaynak = kaynak.replace("$isim",self.paketler_sozluk[isim]["Isim"])
+                        s_ = self.paketler_sozluk[isim]["Surum"].split(".")
+                        if len(s_) >= 2:
+                            kaynak = kaynak.replace("${surum%.*}",s_[0]+"."+s_[1])
+                        kaynak = kaynak.replace("$surum",self.paketler_sozluk[isim]["Surum"])
+                        kaynak = kaynak.replace("$devir",self.paketler_sozluk[isim]["Devir"])
+                        self.paketler_sozluk[isim]["Kaynak"] = kaynak
 
     def surec_baslat(self):
         terminal_thread = surec.SurecThread(self)

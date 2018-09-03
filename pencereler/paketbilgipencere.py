@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout , QVBoxLayout, QLabel, QPushButton, QFormLayout)
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
-import surec
+import surec, os
 
 class PaketBilgiPencere(QWidget):
     def __init__(self, ebeveyn=None):
@@ -46,8 +46,13 @@ class PaketBilgiPencere(QWidget):
         self.gerekler_label.setWordWrap(True)
         form_kutu.addRow(QLabel("<b>Gerekler\t: </b>"),self.gerekler_label)
         self.kaynak_1_label = QLabel()
+        self.kaynak_1_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.kaynak_1_label.linkActivated.connect(self.kaynak_tiklandi)
         form_kutu.addRow(QLabel("<b>Kaynak-1\t: </b>"),self.kaynak_1_label)
- 
+
+    def kaynak_tiklandi(self):
+        os.system("sudo -u {} xdg-open {}&".format(os.listdir("/home")[0],self.ebeveyn.paketler_sozluk[self.paket_adi]["Kaynak"]))
+
     def geri_fonk(self):
         self.ebeveyn.asamalar.setCurrentIndex(1)
 
@@ -79,4 +84,4 @@ class PaketBilgiPencere(QWidget):
         self.devir_label.setText(paket_bilgisi["Devir"])
         self.grup_label.setText(paket_bilgisi["Grup"])
         self.gerekler_label.setText(paket_bilgisi["Gerekler"])
-        self.kaynak_1_label.setText(paket_bilgisi["Kaynak"])
+        self.kaynak_1_label.setText("<a href="+paket_bilgisi["Kaynak"]+">"+paket_bilgisi["Kaynak"]+"</a>")
